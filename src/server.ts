@@ -1,7 +1,7 @@
 import { createServer } from "http";
 import { addSiswa, updateSiswa, deleteSiswa, getSiswa, getSiswaAll } from "./siswa";
 import { parse } from "url";
-import { getSiswaService, getSiswaAllService, addSiswaService, updateSiswaService, deleteSiswaService } from "./siswa.service";
+import { getSiswaService, getSiswaAllService, addSiswaService, updateSiswaService, deleteSiswaService, logsService } from "./siswa.service";
 import { writeLogs, readLogs } from "./log-writer";
 
 
@@ -25,6 +25,7 @@ const server = createServer((req, res) => {
             updateSiswaService(req, res);
             break;
         case '/logs':
+            logsService(req, res);
             break;
         default:
             res.statusCode = 404;

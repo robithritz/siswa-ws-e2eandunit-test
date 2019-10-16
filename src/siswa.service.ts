@@ -2,6 +2,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { parse } from "url";
 import { getSiswa, getSiswaAll, addSiswa, updateSiswa, deleteSiswa } from "./siswa";
 import { SORT_DIRECTION, SISWA_SORT_BY } from "./sqlite";
+import { writeLogs, readLogs } from "./log-writer";
 
 
 export async function getSiswaService(req: IncomingMessage, res: ServerResponse) {
@@ -19,6 +20,7 @@ export async function getSiswaService(req: IncomingMessage, res: ServerResponse)
     try {
         const row = await getSiswa(name);
         console.log(row);
+        writeLogs('./logs/logs.txt', "User melihat detail siswa");
         res.write(JSON.stringify(row));
         res.end();
     } catch (err) {
@@ -82,6 +84,7 @@ export async function getSiswaAllService(req: IncomingMessage, res: ServerRespon
     try {
         const rows = await getSiswaAll(sortBy, sortDirection, limit, offset, classroom);
         console.log(rows);
+        writeLogs('./logs/logs.txt', "User melihat list siswa");
         res.write(JSON.stringify(rows));
         res.end();
     } catch (err) {
@@ -106,6 +109,7 @@ export async function addSiswaService(req: IncomingMessage, res: ServerResponse)
     try {
         const row = await addSiswa({ name: name, classroom: classroom });
         console.log(row);
+        writeLogs('./logs/logs.txt', `User menambahkan siswa ${name}`);
         res.write(JSON.stringify(row));
         res.end();
     } catch (err) {
@@ -130,6 +134,7 @@ export async function updateSiswaService(req: IncomingMessage, res: ServerRespon
     try {
         const row = await updateSiswa(name, classroom);
         console.log(row);
+        writeLogs('./logs/logs.txt', `User mengubah kelas ${name} menjadi ${classroom}`);
         res.write(JSON.stringify(row));
         res.end();
     } catch (err) {
@@ -152,6 +157,23 @@ export async function deleteSiswaService(req: IncomingMessage, res: ServerRespon
     res.setHeader("Content-Type", "application/json");
     try {
         const row = await deleteSiswa(name);
+        console.log(row);
+        writeLogs('./logs/logs.txt', `User menghapus siswa ${name}`);
+        res.write(JSON.stringify(row));
+        res.end();
+    } catch (err) {
+        res.write(err);
+        res.end();
+    }
+}
+
+export async function logsService(req: IncomingMessage, res: ServerResponse) {
+    const url = parse(req.url, true);
+    const query = url.query;
+
+    res.setHeader("Content-Type", "application/json");
+    try {
+        const row = await readLogs('./logs/logs.txt');
         console.log(row);
         res.write(JSON.stringify(row));
         res.end();
