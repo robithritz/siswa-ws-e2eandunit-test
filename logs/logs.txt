@@ -1,2 +1,1 @@
-2019-09-16 09:28:29 - User menghapus siswa bambang
-2019-09-16 09:28:38 - User melihat detail siswa
+2019-09-16 16:02:13 - User melihat list siswa
